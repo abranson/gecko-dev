@@ -375,8 +375,14 @@ PuppetWidgetBase::SetScreenPosition(const LayoutDeviceIntPoint& aPosition)
     return;
   }
 
+  LayoutDeviceIntPoint oldPosition = mScreenPosition;
   mScreenPosition = aPosition;
   mNaturalBounds.MoveTo(aPosition.x, aPosition.y);
+  LayoutDeviceIntRect screenBounds = GetScreenBounds();
+  LOGT("screen position:[%d,%d]->[%d,%d] bounds:[%d,%d,%d,%d] screenBounds:[%d,%d,%d,%d]",
+       oldPosition.x, oldPosition.y, aPosition.x, aPosition.y,
+       mBounds.x, mBounds.y, mBounds.width, mBounds.height,
+       screenBounds.x, screenBounds.y, screenBounds.width, screenBounds.height);
   NotifyWindowMoved(aPosition.x, aPosition.y);
   NotifySafeAreaInsetsChanged();
 }
@@ -388,7 +394,13 @@ PuppetWidgetBase::SetSafeAreaInsets(const mozilla::ScreenIntMargin& aSafeAreaIns
     return;
   }
 
+  ScreenIntMargin oldSafeAreaInsets = mSafeAreaInsets;
   mSafeAreaInsets = aSafeAreaInsets;
+  LayoutDeviceIntRect screenBounds = GetScreenBounds();
+  LOGT("safe area insets:[%d,%d,%d,%d]->[%d,%d,%d,%d] screenBounds:[%d,%d,%d,%d]",
+       oldSafeAreaInsets.top, oldSafeAreaInsets.right, oldSafeAreaInsets.bottom, oldSafeAreaInsets.left,
+       aSafeAreaInsets.top, aSafeAreaInsets.right, aSafeAreaInsets.bottom, aSafeAreaInsets.left,
+       screenBounds.x, screenBounds.y, screenBounds.width, screenBounds.height);
   NotifySafeAreaInsetsChanged();
 }
 
@@ -442,6 +454,10 @@ PuppetWidgetBase::UpdateBounds(bool aRepaint)
     mAttachedWidgetListener ? mAttachedWidgetListener : mWidgetListener;
   if (!oldBounds.IsEqualEdges(mBounds) && listener) {
     listener->WindowResized(this, mBounds.width, mBounds.height);
+  }
+
+  if (!oldBounds.IsEqualEdges(mBounds)) {
+    NotifySafeAreaInsetsChanged();
   }
 
 #ifdef DEBUG

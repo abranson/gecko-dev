@@ -301,6 +301,9 @@ void EmbedLiteView::SetMargins(int top, int right, int bottom, int left)
 void EmbedLiteView::SetSafeAreaInsets(int top, int right, int bottom, int left)
 {
     mozilla::gfx::IntMargin safeAreaInsets(top, right, bottom, left);
+    LOGT("safe area host request old:[%d,%d,%d,%d] new:[%d,%d,%d,%d]",
+         mSafeAreaInsets.top, mSafeAreaInsets.right, mSafeAreaInsets.bottom, mSafeAreaInsets.left,
+         top, right, bottom, left);
     if (mSafeAreaInsets != safeAreaInsets) {
         mSafeAreaInsets = safeAreaInsets;
         Unused << mViewParent->SendSetSafeAreaInsets(top, right, bottom, left);

@@ -777,6 +777,8 @@ mozilla::ipc::IPCResult EmbedLiteViewChild::RecvSetSafeAreaInsets(const int &aTo
                                                                   const int &aBottom, const int &aLeft)
 {
   mSafeAreaInsets = ScreenIntMargin(aTop, aRight, aBottom, aLeft);
+  LOGT("recv safe area insets:[%d,%d,%d,%d] widget:%p",
+       aTop, aRight, aBottom, aLeft, mWidget.get());
   if (mWidget) {
     GetPuppetWidget()->SetSafeAreaInsets(mSafeAreaInsets);
   }

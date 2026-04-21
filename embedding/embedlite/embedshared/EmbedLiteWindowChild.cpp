@@ -133,6 +133,7 @@ mozilla::ipc::IPCResult EmbedLiteWindowChild::RecvSetSize(const gfxSize &aSize)
 mozilla::ipc::IPCResult EmbedLiteWindowChild::RecvSetScreenPosition(const int &aX, const int &aY)
 {
   mBounds.MoveTo(aX, aY);
+  LOGT("recv screen position:[%d,%d] widget:%p", aX, aY, mWidget.get());
   if (mWidget) {
     GetWidget()->SetScreenPosition(LayoutDeviceIntPoint(aX, aY));
   }
